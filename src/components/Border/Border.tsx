@@ -8,8 +8,8 @@ export default function Border() {
   const [showDiv, setShowDiv] = useState(false);
   const [selectStyle, setSelectStyle] = useState("");
   const [selectColor, setSelectColor] = useState("");
-  const [selectStyleBorder, setSelectStyleBorder] = useState("");
-  const [selectColorBorder, setselectColorBorder] = useState("");
+  // const [selectBorderRadius, setSelectBorderRadius] = useState("");
+  const [buttonEnabled, setButtonEnabled] = useState(true);
   const [borderWidth, setBorderWidth] = useState<any>({
     topBorderWidth: undefined,
     leftBorderWidth: undefined,
@@ -31,8 +31,12 @@ export default function Border() {
     bottomLeftBorderRadius: undefined,
     bottomRightBorderRadius: undefined,
   });
+  const clickHandler = () => {
+    setButtonEnabled(false);
+  };
 
-  // Hàm xử lý sự kiện khi input thay đổi
+  const clonedObject: any = { ...borderWidth };
+
   const handleInputChange = (event: any) => {
     const value = event.target.value;
     setBorderWidth({
@@ -49,27 +53,31 @@ export default function Border() {
           leftBorderWidth: value,
           rightBorderWidth: value,
           bottomBorderWidth: value,
-          fullBorderWidth: undefined,
+          // fullBorderWidth: value,
         };
       });
-      // setBorderWidth({
-      //   topBorderWidth: value,
-      //   leftBorderWidth: value,
-      //   rightBorderWidth: value,
-      //   bottomBorderWidth: value,
-      //   topBorderStyle: selectStyleBorder,
-      //   leftBorderStyle: selectStyleBorder,
-      //   rightBorderStyle: selectStyleBorder,
-      //   bottomBorderStyle: selectStyleBorder,
-      //   topBorderColor: selectColorBorder,
-      //   leftBorderColor: selectColorBorder,
-      //   rightBorderColor: selectColorBorder,
-      //   bottomBorderColor: selectColorBorder,
-      // });
     }
   };
+  const handleChangeNumberRadius = (event: any) => {
+    const value2 = event.target.value;
+    setBorderWidth({
+      topLeftBorderRadius: value2,
+      topRightBorderRadius: value2,
+      bottomLeftBorderRadius: value2,
+      bottomRightBorderRadius: value2,
+    });
+  };
 
+  const handleChangeInputRadiusDirection = (event: any, position: any) => {
+    setBorderWidth((prev: any) => {
+      return {
+        ...prev,
+        [position]: event.target.value,
+      };
+    });
+  };
   const handleDivClick = (keyToChange: string) => {
+    // handleChangeColor();
     setSelectBorder(keyToChange);
   };
   const handleDivStyle = (keyToChange: string) => {
@@ -79,6 +87,7 @@ export default function Border() {
   const handleDivColor = (keyToChange: string) => {
     setSelectColor(keyToChange);
   };
+
   const options = [
     {
       value: "Solid",
@@ -98,7 +107,7 @@ export default function Border() {
   ];
 
   function chooseBorder(value: string) {
-    setSelectStyleBorder(value);
+    // setSelectStyleBorder(value);
     console.log("choose style border", value);
     if (selectStyle === "fullBorderStyle") {
       setBorderWidth((prev: any) => {
@@ -108,7 +117,6 @@ export default function Border() {
           leftBorderStyle: value,
           rightBorderStyle: value,
           bottomBorderStyle: value,
-          fullBorderStyle: undefined,
         };
       });
     }
@@ -121,7 +129,7 @@ export default function Border() {
   }
 
   function onChangeColor(value: Color, hex: string) {
-    setselectColorBorder(hex);
+    // setselectColorBorder(hex);
     if (selectColor === "fullBorderColor") {
       console.log("border", borderWidth);
       setBorderWidth((prev: any) => {
@@ -147,7 +155,9 @@ export default function Border() {
     <div className={borderStyle["panel"]}>
       <div className={borderStyle["style-left"]}>
         <div className={borderStyle["json-show"]}>
-          {JSON.stringify(borderWidth, null, 2)}
+          {delete clonedObject.fullBorderWidth}
+          {delete clonedObject.fullBorderStyle}
+          {JSON.stringify(clonedObject, null, 2)}
         </div>
       </div>
       <div className={borderStyle["style-panel"]}>
@@ -157,6 +167,7 @@ export default function Border() {
             <div className={borderStyle["border"]}>
               <div
                 className={borderStyle["border-top"]}
+                // style={{ borderTop: `2px solid ${borderColor}` }}
                 onClick={() => {
                   handleDivClick("topBorderWidth");
                   handleDivStyle("topBorderStyle");
@@ -166,6 +177,7 @@ export default function Border() {
               <Flex>
                 <div
                   className={borderStyle["border-left"]}
+                  // style={{ borderLeft: `2px solid ${borderColor}` }}
                   onClick={() => {
                     handleDivClick("leftBorderWidth");
                     handleDivStyle("leftBorderStyle");
@@ -174,6 +186,7 @@ export default function Border() {
                 ></div>
                 <div
                   className={borderStyle["border-full"]}
+                  // style={{ border: `2px solid ${borderColor}` }}
                   onClick={() => {
                     handleDivClick("fullBorderWidth");
                     handleDivStyle("fullBorderStyle");
@@ -182,6 +195,7 @@ export default function Border() {
                 ></div>
                 <div
                   className={borderStyle["border-right"]}
+                  // style={{ borderRight: `2px solid ${borderColor}` }}
                   onClick={() => {
                     handleDivClick("rightBorderWidth");
                     handleDivStyle("rightBorderStyle");
@@ -191,6 +205,7 @@ export default function Border() {
               </Flex>
               <div
                 className={borderStyle["border-bottom"]}
+                // style={{ borderBottom: `2px solid ${borderColor}` }}
                 onClick={() => {
                   handleDivClick("bottomBorderWidth");
                   handleDivStyle("bottomBorderStyle");
@@ -232,37 +247,88 @@ export default function Border() {
         <div className={borderStyle["border-radius"]}>
           <div
             className={borderStyle["border-full-radius"]}
-            onClick={() => setShowDiv(false)}
+            onClick={() => {
+              setShowDiv(false);
+              setButtonEnabled(true);
+            }}
           >
-            <div className={borderStyle["box-radius"]}></div>
+            <div className={borderStyle["box-radius"]} />
           </div>
           <div>
             <div
               className={borderStyle["border-radius-direction"]}
-              onClick={() => setShowDiv(true)}
+              onClick={() => {
+                clickHandler();
+                setShowDiv(true);
+              }}
             >
-              <div className={borderStyle["box-direction"]}></div>
+              <div className={borderStyle["box-direction"]} />
             </div>
           </div>
-          <Input className={borderStyle["input-number-radius"]} />
+          <Input
+            className={borderStyle["input-number-radius"]}
+            value={borderWidth[selectBorder]}
+            disabled={!buttonEnabled}
+            onChange={handleChangeNumberRadius}
+          />
         </div>
         {showDiv && (
           <div className={borderStyle["box-radius-setting"]}>
             <div className={borderStyle["border-top-left"]}>
-              <Input className={borderStyle["input-top-left"]} />
-              <div className={borderStyle["icon-top-left"]}></div>
+              <Input
+                className={borderStyle["input-top-left"]}
+                value={borderWidth["topLeftBorderRadius"]}
+                onChange={(value: any) => {
+                  console.log("value Top Left", value);
+                  handleChangeInputRadiusDirection(
+                    value,
+                    "topLeftBorderRadius"
+                  );
+                }}
+              />
+              <div className={borderStyle["icon-top-left"]} />
             </div>
             <div className={borderStyle["border-top-right"]}>
-              <Input className={borderStyle["input-top-right"]} />
-              <div className={borderStyle["icon-top-right"]}></div>
+              <Input
+                className={borderStyle["input-top-right"]}
+                value={borderWidth["topRightBorderRadius"]}
+                onChange={(value: any) => {
+                  console.log("value Top Left", value);
+                  handleChangeInputRadiusDirection(
+                    value,
+                    "topRightBorderRadius"
+                  );
+                }}
+              />
+              <div className={borderStyle["icon-top-right"]} />
             </div>
             <div className={borderStyle["border-bottom-left"]}>
-              <Input className={borderStyle["input-bottom-left"]} />
-              <div className={borderStyle["icon-bottom-left"]}></div>
+              <Input
+                className={borderStyle["input-bottom-left"]}
+                value={borderWidth["bottomLeftBorderRadius"]}
+                onChange={(value: any) => {
+                  console.log("value Top Left", value);
+                  handleChangeInputRadiusDirection(
+                    value,
+                    "bottomLeftBorderRadius"
+                  );
+                }}
+              />
+              <div className={borderStyle["icon-bottom-left"]} />
             </div>
             <div className={borderStyle["border-bottom-right"]}>
-              <Input className={borderStyle["input-bottom-right"]} />
-              <div className={borderStyle["icon-bottom-right"]}></div>
+              <Input
+                className={borderStyle["input-bottom-right"]}
+                value={borderWidth["bottomRightBorderRadius"]}
+                onChange={(value: any) => {
+                  console.log("value Top Left", value);
+                  handleChangeInputRadiusDirection(
+                    value,
+                    "bottomRightBorderRadius"
+                  );
+                }}
+              />
+              <div className={borderStyle["icon-bottom-right"]} />
             </div>
           </div>
         )}
