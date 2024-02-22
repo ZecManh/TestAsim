@@ -3,13 +3,21 @@ import borderStyle from "./Border.module.scss";
 import { useState } from "react";
 import { ColorPicker } from "antd";
 import { Color } from "antd/es/color-picker";
+import BorderRadius from "./BorderRadius";
+import Margin from "../MarginPadding/Margin";
 export default function Border() {
   const [selectBorder, setSelectBorder] = useState("");
-  const [showDiv, setShowDiv] = useState(false);
+
   const [selectStyle, setSelectStyle] = useState("");
   const [selectColor, setSelectColor] = useState("");
-  // const [selectBorderRadius, setSelectBorderRadius] = useState("");
-  const [buttonEnabled, setButtonEnabled] = useState(true);
+  const [selectRadius, setSelectRadius] = useState({});
+  const [selectMargin, setSelectMargin] = useState({});
+  const callbackFunction = (childData: any) => {
+    setSelectRadius(childData);
+  };
+  const callbackFunction1 = (childData: any) => {
+    setSelectMargin(childData);
+  };
   const [borderWidth, setBorderWidth] = useState<any>({
     topBorderWidth: undefined,
     leftBorderWidth: undefined,
@@ -26,17 +34,10 @@ export default function Border() {
     rightBorderColor: undefined,
     bottomBorderColor: undefined,
     fullBorderColor: undefined,
-    topLeftBorderRadius: undefined,
-    topRightBorderRadius: undefined,
-    bottomLeftBorderRadius: undefined,
-    bottomRightBorderRadius: undefined,
   });
-  const clickHandler = () => {
-    setButtonEnabled(false);
-  };
 
   const clonedObject: any = { ...borderWidth };
-
+  const mergeObject = { ...clonedObject, ...selectRadius };
   const handleInputChange = (event: any) => {
     const value = event.target.value;
     setBorderWidth({
@@ -58,24 +59,7 @@ export default function Border() {
       });
     }
   };
-  const handleChangeNumberRadius = (event: any) => {
-    const value2 = event.target.value;
-    setBorderWidth({
-      topLeftBorderRadius: value2,
-      topRightBorderRadius: value2,
-      bottomLeftBorderRadius: value2,
-      bottomRightBorderRadius: value2,
-    });
-  };
 
-  const handleChangeInputRadiusDirection = (event: any, position: any) => {
-    setBorderWidth((prev: any) => {
-      return {
-        ...prev,
-        [position]: event.target.value,
-      };
-    });
-  };
   const handleDivClick = (keyToChange: string) => {
     // handleChangeColor();
     setSelectBorder(keyToChange);
@@ -157,7 +141,10 @@ export default function Border() {
         <div className={borderStyle["json-show"]}>
           {delete clonedObject.fullBorderWidth}
           {delete clonedObject.fullBorderStyle}
-          {JSON.stringify(clonedObject, null, 2)}
+          {JSON.stringify(mergeObject, null, 2)}
+        </div>
+        <div className={borderStyle["json-show"]}>
+          {JSON.stringify(selectMargin, null, 2)}
         </div>
       </div>
       <div className={borderStyle["style-panel"]}>
@@ -244,94 +231,9 @@ export default function Border() {
           </Flex>
         </div>
         <p>Border radius</p>
-        <div className={borderStyle["border-radius"]}>
-          <div
-            className={borderStyle["border-full-radius"]}
-            onClick={() => {
-              setShowDiv(false);
-              setButtonEnabled(true);
-            }}
-          >
-            <div className={borderStyle["box-radius"]} />
-          </div>
-          <div>
-            <div
-              className={borderStyle["border-radius-direction"]}
-              onClick={() => {
-                clickHandler();
-                setShowDiv(true);
-              }}
-            >
-              <div className={borderStyle["box-direction"]} />
-            </div>
-          </div>
-          <Input
-            className={borderStyle["input-number-radius"]}
-            value={borderWidth[selectBorder]}
-            disabled={!buttonEnabled}
-            onChange={handleChangeNumberRadius}
-          />
-        </div>
-        {showDiv && (
-          <div className={borderStyle["box-radius-setting"]}>
-            <div className={borderStyle["border-top-left"]}>
-              <Input
-                className={borderStyle["input-top-left"]}
-                value={borderWidth["topLeftBorderRadius"]}
-                onChange={(value: any) => {
-                  console.log("value Top Left", value);
-                  handleChangeInputRadiusDirection(
-                    value,
-                    "topLeftBorderRadius"
-                  );
-                }}
-              />
-              <div className={borderStyle["icon-top-left"]} />
-            </div>
-            <div className={borderStyle["border-top-right"]}>
-              <Input
-                className={borderStyle["input-top-right"]}
-                value={borderWidth["topRightBorderRadius"]}
-                onChange={(value: any) => {
-                  console.log("value Top Left", value);
-                  handleChangeInputRadiusDirection(
-                    value,
-                    "topRightBorderRadius"
-                  );
-                }}
-              />
-              <div className={borderStyle["icon-top-right"]} />
-            </div>
-            <div className={borderStyle["border-bottom-left"]}>
-              <Input
-                className={borderStyle["input-bottom-left"]}
-                value={borderWidth["bottomLeftBorderRadius"]}
-                onChange={(value: any) => {
-                  console.log("value Top Left", value);
-                  handleChangeInputRadiusDirection(
-                    value,
-                    "bottomLeftBorderRadius"
-                  );
-                }}
-              />
-              <div className={borderStyle["icon-bottom-left"]} />
-            </div>
-            <div className={borderStyle["border-bottom-right"]}>
-              <Input
-                className={borderStyle["input-bottom-right"]}
-                value={borderWidth["bottomRightBorderRadius"]}
-                onChange={(value: any) => {
-                  console.log("value Top Left", value);
-                  handleChangeInputRadiusDirection(
-                    value,
-                    "bottomRightBorderRadius"
-                  );
-                }}
-              />
-              <div className={borderStyle["icon-bottom-right"]} />
-            </div>
-          </div>
-        )}
+        <BorderRadius parentCallback={callbackFunction} />
+        <p>Margin</p>
+        <Margin callBackMargin={callbackFunction1} />
       </div>
     </div>
   );
