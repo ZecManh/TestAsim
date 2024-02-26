@@ -5,6 +5,7 @@ import { ColorPicker } from "antd";
 import { Color } from "antd/es/color-picker";
 import BorderRadius from "./BorderRadius";
 import Margin from "../MarginPadding/Margin";
+import Background from "../BackGround/Background";
 export default function Border() {
   const [selectBorder, setSelectBorder] = useState("");
 
@@ -12,11 +13,15 @@ export default function Border() {
   const [selectColor, setSelectColor] = useState("");
   const [selectRadius, setSelectRadius] = useState({});
   const [selectMargin, setSelectMargin] = useState({});
+  const [selectBackground, setSelectBackGround] = useState({});
   const callbackFunction = (childData: any) => {
     setSelectRadius(childData);
   };
   const callbackFunction1 = (childData: any) => {
     setSelectMargin(childData);
+  };
+  const callbackFunction2 = (childData: any) => {
+    setSelectBackGround(childData);
   };
   const [borderWidth, setBorderWidth] = useState<any>({
     topBorderWidth: undefined,
@@ -130,7 +135,7 @@ export default function Border() {
     setBorderWidth((prev: any) => {
       return {
         ...prev,
-        [selectColor]: hex,
+        background: hex,
       };
     });
   }
@@ -145,6 +150,9 @@ export default function Border() {
         </div>
         <div className={borderStyle["json-show"]}>
           {JSON.stringify(selectMargin, null, 2)}
+        </div>
+        <div className={borderStyle["json-show"]}>
+          {JSON.stringify(selectBackground, null, 2)}
         </div>
       </div>
       <div className={borderStyle["style-panel"]}>
@@ -234,6 +242,8 @@ export default function Border() {
         <BorderRadius parentCallback={callbackFunction} />
         <p>Margin</p>
         <Margin callBackMargin={callbackFunction1} />
+        <p>BackGround</p>
+        <Background callBackMargin={callbackFunction2} />
       </div>
     </div>
   );

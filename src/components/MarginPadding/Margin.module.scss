@@ -52,71 +52,78 @@
   display: flex;
 }
 .back-ground-img-margin {
-  background: url(../../assets/margin.svg);
-  background-size: contain;
-  background-repeat: no-repeat;
-  width: 100%;
-  height: 132px;
   margin-top: 12px;
   position: relative;
 }
+
 .name-margin {
+  position: absolute;
+  font-size: 8px;
   top: 5%;
   left: 2%;
-  font-size: 8px;
-  position: absolute;
 }
 .margin-top {
-  left: 49%;
-  top: 1px;
+  left: 48%;
+  top: -4%;
   cursor: pointer;
   position: absolute;
 }
-.margin-left-style {
-  left: 5%;
-  top: 40%;
-  cursor: pointer;
-  position: absolute;
-}
-.margin-right {
-  position: absolute;
-  left: 90%;
-  cursor: pointer;
-  top: 40%;
-}
-.margin-bottom {
-  position: absolute;
-  top: 80%;
-  left: 49%;
-  cursor: pointer;
-}
+
 .name-padding {
   font-size: 8px;
   position: absolute;
-  top: 25%;
+  top: 23%;
   left: 24%;
 }
 .padding-top {
   position: absolute;
-  left: 49%;
-  top: 20%;
+  left: 48%;
+  top: 17%;
   cursor: pointer;
 }
+
+.margin-left-style {
+  cursor: pointer;
+  left: 3%;
+  top: 37%;
+  position: absolute;
+}
+.margin-right {
+  position: absolute;
+  left: 87%;
+  cursor: pointer;
+  top: 37%;
+}
+
 .padding-left {
-  left: 30%;
-  top: 40%;
+  left: 29%;
+  top: 37%;
   cursor: pointer;
   position: absolute;
 }
 .padding-right {
   position: absolute;
-  left: 67%;
+  left: 66%;
+  top: 37%;
   cursor: pointer;
-  top: 40%;
+}
+
+.margin-bottom {
+  position: absolute;
+  top: 76%;
+  left: 48%;
+  cursor: pointer;
 }
 .padding-bottom {
   position: absolute;
-  top: 60%;
+  top: 52%;
   cursor: pointer;
-  left: 49%;
+  left: 48%;
+}
+
+.font-size-margin-padding {
+  font-size: 10px;
+}
+.img-margin-padding {
+  width: 100%;
 }

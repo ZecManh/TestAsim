@@ -1,0 +1,58 @@
+.select-background {
+  .ant-select {
+    width: 100% !important;
+  }
+}
+.button-background {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #e8e9eb;
+}
+.line-red {
+  transform: rotate(-45deg) translateY(-50%);
+  background-color: #f23d3d;
+  content: "";
+  display: block;
+  height: 2px;
+  margin-top: 50%;
+  width: 100%;
+}
+.color-default {
+  width: 19px;
+  height: 19px;
+  border: 1px solid #f7f7f9;
+  margin-left: 10px;
+}
+.icon-drop-down {
+  display: flex;
+  margin-right: 10px;
+  color: #84868c;
+}
+.avatar-uploader .ant-upload-select {
+  width: 210px !important;
+  margin-inline-end: 0px !important;
+}
+.select-color-picker {
+  display: flex;
+}
+.choose-box {
+  margin-left: 10px;
+}
+.choose-color {
+  margin-left: 10px;
+}
+.style-choose-color {
+  display: flex;
+}
+.text-color {
+  margin-left: 10px;
+}
+.close-color {
+  color: #d4d6d9;
+  margin-right: 8px;
+  cursor: pointer;
+}
