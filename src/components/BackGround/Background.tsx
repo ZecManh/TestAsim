@@ -7,8 +7,7 @@ import {
   Upload,
   UploadProps,
 } from "antd";
-
-import "./Background.scss";
+import backgroundStyle from "./Background.module.scss";
 import { useState } from "react";
 import {
   AndroidOutlined,
@@ -20,12 +19,12 @@ import {
 } from "@ant-design/icons";
 import { message } from "antd";
 export default function Background(props: any) {
-  const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string>();
   const [selectBackGround, setSelectBackGround] = useState({
     background: undefined,
   });
-  //Start Tab upload Image
+  const [color, setColor] = useState("red");
+  const [loading, setLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string>();
   type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
   const getBase64 = (img: FileType, callback: (url: string) => void) => {
@@ -100,7 +99,7 @@ export default function Background(props: any) {
     );
   };
   //End Tab upload Image
-  const [color, setColor] = useState("red");
+
   function ChangeColor(value: any, hex: string) {
     setColor(hex);
     setSelectBackGround((prev: any) => {
@@ -110,6 +109,7 @@ export default function Background(props: any) {
       };
     });
   }
+
   function resetColor() {
     setSelectBackGround((prev: any) => {
       return {
@@ -118,62 +118,66 @@ export default function Background(props: any) {
       };
     });
   }
-
-  const BasicDemo = () => (
-    <ColorPicker
-      defaultValue="#000000"
-      onChange={ChangeColor}
-      panelRender={(panel) => (
-        <div className="custom-panel">
-          <Tabs
-            items={[
-              { key: "1", label: <AppleOutlined />, children: panel },
-              { key: "2", label: <AndroidOutlined />, children: tab2() },
-            ]}
-          />
-        </div>
-      )}
-    >
-      <Button className="button-background">
-        {selectBackGround.background ? (
-          <>
-            <div className="style-choose-color">
-              <div
-                className="color-default"
-                style={{
-                  backgroundColor: color,
-                }}
-              ></div>
-              <div className="text-color">{selectBackGround.background}</div>
-            </div>
-          </>
-        ) : (
-          <div className="color-default">
-            <div className="line-red"></div>
-          </div>
-        )}
-
-        <div className="icon-drop-down">
-          {selectBackGround.background ? (
-            <div className="close-icon" onClick={resetColor}>
-              <CloseCircleOutlined className="close-color" />
-            </div>
-          ) : (
-            ""
-          )}
-          <DownOutlined />
-        </div>
-      </Button>
-    </ColorPicker>
-  );
   const sendDataMargin = () => {
-    props.callBackMargin(selectBackGround);
+    props.callBackBackground(selectBackGround);
   };
   sendDataMargin();
   return (
     <>
-      <div className="select-background">
-        <BasicDemo />
+      <div className={backgroundStyle["select-background"]}>
+        <ColorPicker
+          defaultValue="#000000"
+          onChange={ChangeColor}
+          value={selectBackGround.background}
+          panelRender={(panel) => (
+            <div className={backgroundStyle["custom-panel"]}>
+              <Tabs
+                items={[
+                  { key: "1", label: <AppleOutlined />, children: panel },
+                  { key: "2", label: <AndroidOutlined />, children: tab2() },
+                ]}
+              />
+            </div>
+          )}
+        >
+          <Button className={backgroundStyle["button-background"]}>
+            {selectBackGround.background ? (
+              <>
+                <div className={backgroundStyle["style-choose-color"]}>
+                  <div
+                    className={backgroundStyle["color-default"]}
+                    style={{
+                      backgroundColor: color,
+                    }}
+                  ></div>
+                  <div className={backgroundStyle["text-color"]}>
+                    {selectBackGround.background}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className={backgroundStyle["color-default"]}>
+                <div className={backgroundStyle["line-red"]}></div>
+              </div>
+            )}
+
+            <div className={backgroundStyle["icon-drop-down"]}>
+              {selectBackGround.background ? (
+                <div
+                  className={backgroundStyle["close-icon"]}
+                  onClick={resetColor}
+                >
+                  <CloseCircleOutlined
+                    className={backgroundStyle["close-color"]}
+                  />
+                </div>
+              ) : (
+                ""
+              )}
+              <DownOutlined />
+            </div>
+          </Button>
+        </ColorPicker>
       </div>
     </>
   );

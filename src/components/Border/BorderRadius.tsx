@@ -3,8 +3,8 @@ import borderStyle from "./Border.module.scss";
 import { useState } from "react";
 
 export default function BorderRadius(props: any) {
-  const [showDiv, setShowDiv] = useState(false);
-  const [buttonEnabled, setButtonEnabled] = useState(true);
+  const [showDirectionBorder, setShowDirectionBorder] = useState(false);
+  const [disableInput, setDisableInput] = useState(true);
   const [borderRadius, setBorderRadius] = useState<any>({
     topLeftBorderRadius: undefined,
     topRightBorderRadius: undefined,
@@ -12,12 +12,10 @@ export default function BorderRadius(props: any) {
     bottomRightBorderRadius: undefined,
   });
 
-  const clickHandler = () => {
-    setButtonEnabled(false);
+  const onClickBorderDirectionRadius = () => {
+    setDisableInput(false);
   };
-  const sendDataRadius = () => {
-    props.parentCallback(borderRadius);
-  };
+
   const handleChangeNumberRadius = (event: any) => {
     const value2 = event.target.value;
     setBorderRadius({
@@ -26,14 +24,29 @@ export default function BorderRadius(props: any) {
       bottomLeftBorderRadius: value2,
       bottomRightBorderRadius: value2,
     });
+    if (value2 === "") {
+      setBorderRadius({});
+    }
   };
   const handleChangeInputRadiusDirection = (event: any, position: any) => {
+    const value3 = event.target.value;
     setBorderRadius((prev: any) => {
       return {
         ...prev,
-        [position]: event.target.value,
+        [position]: value3,
       };
     });
+    if (value3 === "") {
+      setBorderRadius((prev: any) => {
+        return {
+          ...prev,
+          [position]: undefined,
+        };
+      });
+    }
+  };
+  const sendDataRadius = () => {
+    props.callBackBorderRadius(borderRadius);
   };
   sendDataRadius();
   return (
@@ -42,8 +55,8 @@ export default function BorderRadius(props: any) {
         <div
           className={borderStyle["border-full-radius"]}
           onClick={() => {
-            setShowDiv(false);
-            setButtonEnabled(true);
+            setShowDirectionBorder(false);
+            setDisableInput(true);
           }}
         >
           <div className={borderStyle["box-radius"]} />
@@ -52,8 +65,8 @@ export default function BorderRadius(props: any) {
           <div
             className={borderStyle["border-radius-direction"]}
             onClick={() => {
-              clickHandler();
-              setShowDiv(true);
+              onClickBorderDirectionRadius();
+              setShowDirectionBorder(true);
             }}
           >
             <div className={borderStyle["box-direction"]} />
@@ -61,12 +74,11 @@ export default function BorderRadius(props: any) {
         </div>
         <Input
           className={borderStyle["input-number-radius"]}
-          // value={borderWidth[selectBorder]}
-          disabled={!buttonEnabled}
+          disabled={!disableInput}
           onChange={handleChangeNumberRadius}
         />
       </div>
-      {showDiv && (
+      {showDirectionBorder && (
         <div className={borderStyle["box-radius-setting"]}>
           <div className={borderStyle["border-top-left"]}>
             <Input

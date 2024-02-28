@@ -2,10 +2,10 @@ import { Input, Popover } from "antd";
 import { useState } from "react";
 import marginPadding from "./Margin.module.scss";
 export default function Margin(props: any) {
-  const [showDiv, setShowDiv] = useState(false);
-  const [direction, setDirection] = useState("");
-
-  const [selectMargin, setSelectMargin] = useState<any>({
+  const [customMarginPadding, setCustomMarginPadding] = useState(false);
+  const [valueMargin, setValueMargin] = useState("");
+  const [valuePadding, setValuePadding] = useState("");
+  const [selectMarginPadding, setSelectMarginPadding] = useState<any>({
     marginTop: undefined,
     marginLeft: undefined,
     marginRight: undefined,
@@ -16,55 +16,86 @@ export default function Margin(props: any) {
     paddingBottom: undefined,
   });
   const sendDataMargin = () => {
-    props.callBackMargin(selectMargin);
+    props.callBackMargin(selectMarginPadding);
   };
   function handleChangeInputMargin(event: any) {
     const value = event.target.value;
-    // setValueMargin(value);
-    setSelectMargin((prev: any) => {
-      return {
-        ...prev,
-        marginTop: value,
-        marginLeft: value,
-        marginRight: value,
-        marginBottom: value,
-      };
-    });
+    setValueMargin(value);
+    if (value === "") {
+      setSelectMarginPadding((prev: any) => {
+        return {
+          ...prev,
+          marginTop: undefined,
+          marginLeft: undefined,
+          marginRight: undefined,
+          marginBottom: undefined,
+        };
+      });
+    } else {
+      setSelectMarginPadding((prev: any) => {
+        return {
+          ...prev,
+          marginTop: value,
+          marginLeft: value,
+          marginRight: value,
+          marginBottom: value,
+        };
+      });
+    }
   }
   function handleChangeInputPadding(event: any) {
     const value = event.target.value;
-    // setValuePadding(value);
-    setSelectMargin((prev: any) => {
-      return {
-        ...prev,
-        paddingTop: value,
-        paddingLeft: value,
-        paddingRight: value,
-        paddingBottom: value,
-      };
-    });
+    setValuePadding(value);
+    if (value === "") {
+      setSelectMarginPadding((prev: any) => {
+        return {
+          ...prev,
+          paddingTop: undefined,
+          paddingLeft: undefined,
+          paddingRight: undefined,
+          paddingBottom: undefined,
+        };
+      });
+    } else {
+      setSelectMarginPadding((prev: any) => {
+        return {
+          ...prev,
+          paddingTop: value,
+          paddingLeft: value,
+          paddingRight: value,
+          paddingBottom: value,
+        };
+      });
+    }
   }
-  function handleChangeInputNumberMargin(
+  function handleChangeInputNumberMarginPadding(
     event: any,
     directionMarginPadding: any
   ) {
     // setValueMarginPadding(event.target.value);
-    setSelectMargin((prev: any) => {
+    setSelectMarginPadding((prev: any) => {
       return {
         ...prev,
         [directionMarginPadding]: event.target.value,
       };
     });
+    if (event.target.value === "") {
+      setSelectMarginPadding((prev: any) => {
+        return {
+          ...prev,
+          [directionMarginPadding]: undefined,
+        };
+      });
+    }
     console.log("directionMarginPadding", directionMarginPadding);
   }
-  function inputNumber(direction: string) {
-    setDirection(direction);
+  function inputNumberMarginPadding(direction: string) {
     return (
       <Input
         placeholder=""
-        value={selectMargin[direction]}
+        value={selectMarginPadding[direction]}
         onChange={(value: any) => {
-          handleChangeInputNumberMargin(value, direction);
+          handleChangeInputNumberMarginPadding(value, direction);
         }}
       />
     );
@@ -77,7 +108,7 @@ export default function Margin(props: any) {
           <div
             className={marginPadding["margin-full"]}
             onClick={() => {
-              setShowDiv(false);
+              setCustomMarginPadding(false);
             }}
           >
             <div className={marginPadding["box-margin"]} />
@@ -85,23 +116,25 @@ export default function Margin(props: any) {
           <div
             className={marginPadding["margin-direction"]}
             onClick={() => {
-              setShowDiv(true);
+              setCustomMarginPadding(true);
             }}
           >
             <div className={marginPadding["box-margin-direction"]} />
           </div>
         </div>
-        {!showDiv && (
+        {!customMarginPadding && (
           <div className={marginPadding["input-right"]}>
             <div className={marginPadding["input-margin"]}>
               <Input
                 className={marginPadding["input-number-margin"]}
                 onChange={handleChangeInputMargin}
+                value={valueMargin}
               />
               <div>Margin</div>
             </div>
             <div className={marginPadding["input-margin"]}>
               <Input
+                value={valuePadding}
                 className={marginPadding["input-number-padding"]}
                 onChange={handleChangeInputPadding}
                 // value={borderWidth[selectBorder]}
@@ -111,7 +144,7 @@ export default function Margin(props: any) {
           </div>
         )}
       </div>
-      {showDiv && (
+      {customMarginPadding && (
         <div className={marginPadding["back-ground-img-margin"]}>
           <img
             className={marginPadding["img-margin-padding"]}
@@ -122,78 +155,94 @@ export default function Margin(props: any) {
           <div className={marginPadding["name-margin"]}>Margin</div>
           <div className={marginPadding["margin-top"]}>
             <Popover
-              title={() => inputNumber("marginTop")}
+              title={() => inputNumberMarginPadding("marginTop")}
               trigger="click"
               className={marginPadding["font-size-margin-padding"]}
             >
-              {selectMargin.marginTop ? selectMargin.marginTop : "-"}
+              {selectMarginPadding.marginTop
+                ? selectMarginPadding.marginTop
+                : "-"}
             </Popover>
           </div>
 
           <div className={marginPadding["name-padding"]}>Padding</div>
           <div className={marginPadding["padding-top"]}>
             <Popover
-              title={() => inputNumber("paddingTop")}
+              title={() => inputNumberMarginPadding("paddingTop")}
               trigger="click"
               className={marginPadding["font-size-margin-padding"]}
             >
-              {selectMargin.paddingTop ? selectMargin.paddingTop : "-"}
+              {selectMarginPadding.paddingTop
+                ? selectMarginPadding.paddingTop
+                : "-"}
             </Popover>
           </div>
 
           <div className={marginPadding["margin-left-style"]}>
             <Popover
-              title={() => inputNumber("marginLeft")}
+              title={() => inputNumberMarginPadding("marginLeft")}
               trigger="click"
               className={marginPadding["font-size-margin-padding"]}
             >
-              {selectMargin.marginLeft ? selectMargin.marginLeft : "-"}
+              {selectMarginPadding.marginLeft
+                ? selectMarginPadding.marginLeft
+                : "-"}
             </Popover>
           </div>
           <div className={marginPadding["padding-left"]}>
             <Popover
-              title={() => inputNumber("paddingLeft")}
+              title={() => inputNumberMarginPadding("paddingLeft")}
               trigger="click"
               className={marginPadding["font-size-margin-padding"]}
             >
-              {selectMargin.paddingLeft ? selectMargin.paddingLeft : "-"}
+              {selectMarginPadding.paddingLeft
+                ? selectMarginPadding.paddingLeft
+                : "-"}
             </Popover>
           </div>
           <div className={marginPadding["padding-right"]}>
             <Popover
-              title={() => inputNumber("paddingRight")}
+              title={() => inputNumberMarginPadding("paddingRight")}
               trigger="click"
               className={marginPadding["font-size-margin-padding"]}
             >
-              {selectMargin.paddingRight ? selectMargin.paddingRight : "-"}
+              {selectMarginPadding.paddingRight
+                ? selectMarginPadding.paddingRight
+                : "-"}
             </Popover>
           </div>
           <div className={marginPadding["margin-right"]}>
             <Popover
-              title={() => inputNumber("marginRight")}
+              title={() => inputNumberMarginPadding("marginRight")}
               trigger="click"
               className={marginPadding["font-size-margin-padding"]}
             >
-              {selectMargin.marginRight ? selectMargin.marginRight : "-"}
+              {selectMarginPadding.marginRight
+                ? selectMarginPadding.marginRight
+                : "-"}
             </Popover>
           </div>
 
           <div className={marginPadding["margin-bottom"]}>
             <Popover
-              title={() => inputNumber("marginBottom")}
+              title={() => inputNumberMarginPadding("marginBottom")}
               trigger="click"
               className={marginPadding["font-size-margin-padding"]}
             >
-              {selectMargin.marginBottom ? selectMargin.marginBottom : "-"}
+              {selectMarginPadding.marginBottom
+                ? selectMarginPadding.marginBottom
+                : "-"}
             </Popover>
           </div>
           <div className={marginPadding["padding-bottom"]}>
             <Popover
-              title={() => inputNumber("paddingBottom")}
+              title={() => inputNumberMarginPadding("paddingBottom")}
               trigger="click"
               className={marginPadding["font-size-margin-padding"]}
             >
-              {selectMargin.paddingBottom ? selectMargin.paddingBottom : "-"}
+              {selectMarginPadding.paddingBottom
+                ? selectMarginPadding.paddingBottom
+                : "-"}
             </Popover>
           </div>
         </div>

@@ -6,23 +6,15 @@ import { Color } from "antd/es/color-picker";
 import BorderRadius from "./BorderRadius";
 import Margin from "../MarginPadding/Margin";
 import Background from "../BackGround/Background";
+import BoxShadow from "../Shadow/BoxShadow";
+
 export default function Border() {
   const [selectBorder, setSelectBorder] = useState("");
-
   const [selectStyle, setSelectStyle] = useState("");
-  const [selectColor, setSelectColor] = useState("");
   const [selectRadius, setSelectRadius] = useState({});
   const [selectMargin, setSelectMargin] = useState({});
   const [selectBackground, setSelectBackGround] = useState({});
-  const callbackFunction = (childData: any) => {
-    setSelectRadius(childData);
-  };
-  const callbackFunction1 = (childData: any) => {
-    setSelectMargin(childData);
-  };
-  const callbackFunction2 = (childData: any) => {
-    setSelectBackGround(childData);
-  };
+  const [selectShadow, setSelectShadow] = useState({});
   const [borderWidth, setBorderWidth] = useState<any>({
     topBorderWidth: undefined,
     leftBorderWidth: undefined,
@@ -40,11 +32,31 @@ export default function Border() {
     bottomBorderColor: undefined,
     fullBorderColor: undefined,
   });
+  const [isActive, setIsActive] = useState(false);
 
+  const toggleActive = () => {
+    setIsActive(!isActive);
+    console.log("isActive", isActive);
+  };
   const clonedObject: any = { ...borderWidth };
+  const cloneShadow: any = { ...selectShadow };
   const mergeObject = { ...clonedObject, ...selectRadius };
+  const callbackFunctionBorderRadius = (childData: any) => {
+    setSelectRadius(childData);
+  };
+  const callbackFunctionMargin = (childData: any) => {
+    setSelectMargin(childData);
+  };
+  const callbackFunctionBackGround = (childData: any) => {
+    setSelectBackGround(childData);
+  };
+  const callbackFunctionShadow = (childData: any) => {
+    setSelectShadow(childData);
+  };
+
   const handleInputChange = (event: any) => {
     const value = event.target.value;
+    console.log("value======", value);
     setBorderWidth({
       ...borderWidth,
       [selectBorder]: value,
@@ -59,46 +71,59 @@ export default function Border() {
           leftBorderWidth: value,
           rightBorderWidth: value,
           bottomBorderWidth: value,
-          // fullBorderWidth: value,
+          fullBorderWidth: undefined,
         };
       });
     }
+    if (selectBorder === "") {
+      setBorderWidth(() => {
+        return {
+          topBorderWidth: value,
+          leftBorderWidth: value,
+          rightBorderWidth: value,
+          bottomBorderWidth: value,
+        };
+      });
+    }
+    if (value === "") {
+      setBorderWidth({});
+    }
   };
 
-  const handleDivClick = (keyToChange: string) => {
-    // handleChangeColor();
+  const handleClickBorder = (keyToChange: string) => {
     setSelectBorder(keyToChange);
   };
   const handleDivStyle = (keyToChange: string) => {
     setSelectStyle(keyToChange);
     console.log("select style", keyToChange);
   };
-  const handleDivColor = (keyToChange: string) => {
-    setSelectColor(keyToChange);
-  };
 
   const options = [
     {
+      value: "none",
+      label: "none",
+    },
+    {
       value: "Solid",
       label: "Solid",
-      customAbbreviation: <div className={borderStyle["border-solid"]}></div>,
+      LineBorder: <div className={borderStyle["border-solid"]}></div>,
     },
     {
       value: "Dotted",
       label: "Dotted",
-      customAbbreviation: <div className={borderStyle["border-dotted"]}></div>,
+      LineBorder: <div className={borderStyle["border-dotted"]}></div>,
     },
     {
       value: "Dashed",
       label: "Dashed",
-      customAbbreviation: <div className={borderStyle["border-dashed"]}></div>,
+      LineBorder: <div className={borderStyle["border-dashed"]}></div>,
     },
   ];
 
   function chooseBorder(value: string) {
-    // setSelectStyleBorder(value);
     console.log("choose style border", value);
     if (selectStyle === "fullBorderStyle") {
+      console.log("selectStyle", selectStyle);
       setBorderWidth((prev: any) => {
         return {
           ...prev,
@@ -106,21 +131,70 @@ export default function Border() {
           leftBorderStyle: value,
           rightBorderStyle: value,
           bottomBorderStyle: value,
+          fullBorderStyle: undefined,
+        };
+      });
+    } else if (selectBorder === "") {
+      setBorderWidth(() => {
+        return {
+          topBorderStyle: value,
+          leftBorderStyle: value,
+          rightBorderStyle: value,
+          bottomBorderStyle: value,
+        };
+      });
+    } else if (selectStyle !== "fullBorderStyle" && selectStyle) {
+      setBorderWidth((prev: any) => {
+        return {
+          ...prev,
+          [selectStyle]: value,
         };
       });
     }
-    setBorderWidth((prev: any) => {
-      return {
-        ...prev,
-        [selectStyle]: value,
-      };
-    });
   }
 
   function onChangeColor(value: Color, hex: string) {
-    // setselectColorBorder(hex);
-    if (selectColor === "fullBorderColor") {
-      console.log("border", borderWidth);
+    console.log("border", borderWidth);
+    if (selectBorder === "") {
+      setBorderWidth((prev: any) => {
+        return {
+          ...prev,
+          topBorderColor: hex,
+          leftBorderColor: hex,
+          rightBorderColor: hex,
+          bottomBorderColor: hex,
+          fullBorderColor: undefined,
+        };
+      });
+    } else if (selectBorder === "topBorderWidth") {
+      setBorderWidth((prev: any) => {
+        return {
+          ...prev,
+          topBorderColor: hex,
+        };
+      });
+    } else if (selectBorder === "leftBorderWidth") {
+      setBorderWidth((prev: any) => {
+        return {
+          ...prev,
+          leftBorderColor: hex,
+        };
+      });
+    } else if (selectBorder === "rightBorderWidth") {
+      setBorderWidth((prev: any) => {
+        return {
+          ...prev,
+          rightBorderColor: hex,
+        };
+      });
+    } else if (selectBorder === "bottomBorderWidth") {
+      setBorderWidth((prev: any) => {
+        return {
+          ...prev,
+          bottomBorderColor: hex,
+        };
+      });
+    } else if (selectBorder === "fullBorderWidth") {
       setBorderWidth((prev: any) => {
         return {
           ...prev,
@@ -132,12 +206,6 @@ export default function Border() {
         };
       });
     }
-    setBorderWidth((prev: any) => {
-      return {
-        ...prev,
-        background: hex,
-      };
-    });
   }
 
   return (
@@ -154,6 +222,13 @@ export default function Border() {
         <div className={borderStyle["json-show"]}>
           {JSON.stringify(selectBackground, null, 2)}
         </div>
+        <div className={borderStyle["json-show"]}>
+          {delete cloneShadow.TRE}
+          {delete cloneShadow.TRA}
+          {delete cloneShadow.D}
+          {delete cloneShadow.P}
+          {JSON.stringify(cloneShadow, null, 2)}
+        </div>
       </div>
       <div className={borderStyle["style-panel"]}>
         <div className={borderStyle["style-string"]}>
@@ -161,40 +236,37 @@ export default function Border() {
           <Flex>
             <div className={borderStyle["border"]}>
               <div
-                className={borderStyle["border-top"]}
-                // style={{ borderTop: `2px solid ${borderColor}` }}
+                // className={borderStyle["border-top"]}
+                className={`${borderStyle["border-top"]} ${
+                  isActive ? "active" : ""
+                }`}
+                // style={{ borderTop: `2px solid ${color}` }}
                 onClick={() => {
-                  handleDivClick("topBorderWidth");
+                  handleClickBorder("topBorderWidth");
                   handleDivStyle("topBorderStyle");
-                  handleDivColor("topBorderColor");
+                  toggleActive();
                 }}
               ></div>
               <Flex>
                 <div
                   className={borderStyle["border-left"]}
-                  // style={{ borderLeft: `2px solid ${borderColor}` }}
                   onClick={() => {
-                    handleDivClick("leftBorderWidth");
+                    handleClickBorder("leftBorderWidth");
                     handleDivStyle("leftBorderStyle");
-                    handleDivColor("leftBorderColor");
                   }}
                 ></div>
                 <div
                   className={borderStyle["border-full"]}
-                  // style={{ border: `2px solid ${borderColor}` }}
                   onClick={() => {
-                    handleDivClick("fullBorderWidth");
+                    handleClickBorder("fullBorderWidth");
                     handleDivStyle("fullBorderStyle");
-                    handleDivColor("fullBorderColor");
                   }}
                 ></div>
                 <div
                   className={borderStyle["border-right"]}
-                  // style={{ borderRight: `2px solid ${borderColor}` }}
                   onClick={() => {
-                    handleDivClick("rightBorderWidth");
+                    handleClickBorder("rightBorderWidth");
                     handleDivStyle("rightBorderStyle");
-                    handleDivColor("rightBorderColor");
                   }}
                 ></div>
               </Flex>
@@ -202,9 +274,8 @@ export default function Border() {
                 className={borderStyle["border-bottom"]}
                 // style={{ borderBottom: `2px solid ${borderColor}` }}
                 onClick={() => {
-                  handleDivClick("bottomBorderWidth");
+                  handleClickBorder("bottomBorderWidth");
                   handleDivStyle("bottomBorderStyle");
-                  handleDivColor("bottomBorderColor");
                 }}
               ></div>
             </div>
@@ -223,7 +294,7 @@ export default function Border() {
                   optionRender={(option) => (
                     <Space>
                       <span role="img" aria-label={option.data.label}>
-                        {option.data.customAbbreviation}
+                        {option.data.LineBorder}
                       </span>
                       {option.data.value}
                     </Space>
@@ -239,11 +310,12 @@ export default function Border() {
           </Flex>
         </div>
         <p>Border radius</p>
-        <BorderRadius parentCallback={callbackFunction} />
+        <BorderRadius callBackBorderRadius={callbackFunctionBorderRadius} />
         <p>Margin</p>
-        <Margin callBackMargin={callbackFunction1} />
+        <Margin callBackMargin={callbackFunctionMargin} />
         <p>BackGround</p>
-        <Background callBackMargin={callbackFunction2} />
+        <Background callBackBackground={callbackFunctionBackGround} />
+        <BoxShadow callBackShadow={callbackFunctionShadow} />
       </div>
     </div>
   );
