@@ -155,6 +155,7 @@ export default function Border() {
 
   function onChangeColor(value: Color, hex: string) {
     console.log("border", borderWidth);
+
     if (selectBorder === "") {
       setBorderWidth((prev: any) => {
         return {
@@ -208,6 +209,10 @@ export default function Border() {
     }
   }
 
+  function clearColor() {
+    setBorderWidth({});
+  }
+
   return (
     <div className={borderStyle["panel"]}>
       <div className={borderStyle["style-left"]}>
@@ -223,10 +228,10 @@ export default function Border() {
           {JSON.stringify(selectBackground, null, 2)}
         </div>
         <div className={borderStyle["json-show"]}>
-          {delete cloneShadow.TRE}
-          {delete cloneShadow.TRA}
-          {delete cloneShadow.D}
-          {delete cloneShadow.P}
+          {delete cloneShadow.X}
+          {delete cloneShadow.Y}
+          {delete cloneShadow.Vague}
+          {delete cloneShadow.Extend}
           {JSON.stringify(cloneShadow, null, 2)}
         </div>
       </div>
@@ -244,7 +249,6 @@ export default function Border() {
                 onClick={() => {
                   handleClickBorder("topBorderWidth");
                   handleDivStyle("topBorderStyle");
-                  toggleActive();
                 }}
               ></div>
               <Flex>
@@ -304,6 +308,8 @@ export default function Border() {
                   defaultValue="#000000"
                   className={borderStyle["color-border"]}
                   onChange={onChangeColor}
+                  onClear={clearColor}
+                  allowClear
                 />
               </div>
             </Flex>
