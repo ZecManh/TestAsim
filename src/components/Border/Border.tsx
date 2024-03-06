@@ -15,6 +15,7 @@ export default function Border() {
   const [selectMargin, setSelectMargin] = useState({});
   const [selectBackground, setSelectBackGround] = useState({});
   const [selectShadow, setSelectShadow] = useState({});
+  const [colorBorder, setColorBorder] = useState("");
   const [borderWidth, setBorderWidth] = useState<any>({
     topBorderWidth: undefined,
     leftBorderWidth: undefined,
@@ -32,12 +33,7 @@ export default function Border() {
     bottomBorderColor: undefined,
     fullBorderColor: undefined,
   });
-  const [isActive, setIsActive] = useState(false);
 
-  const toggleActive = () => {
-    setIsActive(!isActive);
-    console.log("isActive", isActive);
-  };
   const clonedObject: any = { ...borderWidth };
   const cloneShadow: any = { ...selectShadow };
   const mergeObject = { ...clonedObject, ...selectRadius };
@@ -61,7 +57,6 @@ export default function Border() {
       ...borderWidth,
       [selectBorder]: value,
     });
-
     if (selectBorder === "fullBorderWidth") {
       console.log("border", borderWidth);
       setBorderWidth((prev: any) => {
@@ -95,6 +90,10 @@ export default function Border() {
   };
   const handleDivStyle = (keyToChange: string) => {
     setSelectStyle(keyToChange);
+    console.log("select style", keyToChange);
+  };
+  const handleDivColor = (keyToChange: string) => {
+    setColorBorder(keyToChange);
     console.log("select style", keyToChange);
   };
 
@@ -155,11 +154,16 @@ export default function Border() {
 
   function onChangeColor(value: Color, hex: string) {
     console.log("border", borderWidth);
-
-    if (selectBorder === "") {
-      setBorderWidth((prev: any) => {
+    setBorderWidth((prev: any) => {
+      return {
+        ...prev,
+        [colorBorder]: hex,
+      };
+    });
+    if (colorBorder === "") {
+      setBorderWidth(() => {
         return {
-          ...prev,
+          // ...prev,
           topBorderColor: hex,
           leftBorderColor: hex,
           rightBorderColor: hex,
@@ -167,35 +171,8 @@ export default function Border() {
           fullBorderColor: undefined,
         };
       });
-    } else if (selectBorder === "topBorderWidth") {
-      setBorderWidth((prev: any) => {
-        return {
-          ...prev,
-          topBorderColor: hex,
-        };
-      });
-    } else if (selectBorder === "leftBorderWidth") {
-      setBorderWidth((prev: any) => {
-        return {
-          ...prev,
-          leftBorderColor: hex,
-        };
-      });
-    } else if (selectBorder === "rightBorderWidth") {
-      setBorderWidth((prev: any) => {
-        return {
-          ...prev,
-          rightBorderColor: hex,
-        };
-      });
-    } else if (selectBorder === "bottomBorderWidth") {
-      setBorderWidth((prev: any) => {
-        return {
-          ...prev,
-          bottomBorderColor: hex,
-        };
-      });
-    } else if (selectBorder === "fullBorderWidth") {
+    }
+    if (colorBorder === "fullBorderColor") {
       setBorderWidth((prev: any) => {
         return {
           ...prev,
@@ -210,7 +187,45 @@ export default function Border() {
   }
 
   function clearColor() {
-    setBorderWidth({});
+    if (selectBorder === "topBorderWidth") {
+      setBorderWidth((prev: any) => {
+        return {
+          ...prev,
+          topBorderColor: undefined,
+        };
+      });
+    } else if (selectBorder === "leftBorderWidth") {
+      setBorderWidth((prev: any) => {
+        return {
+          ...prev,
+          leftBorderColor: undefined,
+        };
+      });
+    } else if (selectBorder === "rightBorderWidth") {
+      setBorderWidth((prev: any) => {
+        return {
+          ...prev,
+          rightBorderColor: undefined,
+        };
+      });
+    } else if (selectBorder === "bottomBorderWidth") {
+      setBorderWidth((prev: any) => {
+        return {
+          ...prev,
+          bottomBorderColor: undefined,
+        };
+      });
+    } else {
+      setBorderWidth((prev: any) => {
+        return {
+          ...prev,
+          topBorderColor: undefined,
+          rightBorderColor: undefined,
+          leftBorderColor: undefined,
+          bottomBorderColor: undefined,
+        };
+      });
+    }
   }
 
   return (
@@ -241,14 +256,11 @@ export default function Border() {
           <Flex>
             <div className={borderStyle["border"]}>
               <div
-                // className={borderStyle["border-top"]}
-                className={`${borderStyle["border-top"]} ${
-                  isActive ? "active" : ""
-                }`}
-                // style={{ borderTop: `2px solid ${color}` }}
+                className={borderStyle["border-top"]}
                 onClick={() => {
                   handleClickBorder("topBorderWidth");
                   handleDivStyle("topBorderStyle");
+                  handleDivColor("topBorderColor");
                 }}
               ></div>
               <Flex>
@@ -257,6 +269,7 @@ export default function Border() {
                   onClick={() => {
                     handleClickBorder("leftBorderWidth");
                     handleDivStyle("leftBorderStyle");
+                    handleDivColor("leftBorderColor");
                   }}
                 ></div>
                 <div
@@ -264,6 +277,7 @@ export default function Border() {
                   onClick={() => {
                     handleClickBorder("fullBorderWidth");
                     handleDivStyle("fullBorderStyle");
+                    handleDivColor("fullBorderColor");
                   }}
                 ></div>
                 <div
@@ -271,15 +285,16 @@ export default function Border() {
                   onClick={() => {
                     handleClickBorder("rightBorderWidth");
                     handleDivStyle("rightBorderStyle");
+                    handleDivColor("rightBorderColor");
                   }}
                 ></div>
               </Flex>
               <div
                 className={borderStyle["border-bottom"]}
-                // style={{ borderBottom: `2px solid ${borderColor}` }}
                 onClick={() => {
                   handleClickBorder("bottomBorderWidth");
                   handleDivStyle("bottomBorderStyle");
+                  handleDivColor("bottomBorderColor");
                 }}
               ></div>
             </div>
@@ -293,6 +308,7 @@ export default function Border() {
                 <Select
                   className={borderStyle["select-style-border"]}
                   options={options}
+                  value={borderWidth[selectStyle]}
                   optionLabelProp="customAbbreviation"
                   onSelect={chooseBorder}
                   optionRender={(option) => (
@@ -305,7 +321,8 @@ export default function Border() {
                   )}
                 />
                 <ColorPicker
-                  defaultValue="#000000"
+                  value={borderWidth[colorBorder]}
+                  // defaultValue="#000000"
                   className={borderStyle["color-border"]}
                   onChange={onChangeColor}
                   onClear={clearColor}

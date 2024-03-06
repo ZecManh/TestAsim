@@ -5,6 +5,7 @@ export default function Margin(props: any) {
   const [customMarginPadding, setCustomMarginPadding] = useState(false);
   const [valueMargin, setValueMargin] = useState("");
   const [valuePadding, setValuePadding] = useState("");
+  const [activeIcon, setActiveIcon] = useState(false);
   const [selectMarginPadding, setSelectMarginPadding] = useState<any>({
     marginTop: undefined,
     marginLeft: undefined,
@@ -21,73 +22,43 @@ export default function Margin(props: any) {
   function handleChangeInputMargin(event: any) {
     const value = event.target.value;
     setValueMargin(value);
-    if (value === "") {
-      setSelectMarginPadding((prev: any) => {
-        return {
-          ...prev,
-          marginTop: undefined,
-          marginLeft: undefined,
-          marginRight: undefined,
-          marginBottom: undefined,
-        };
-      });
-    } else {
-      setSelectMarginPadding((prev: any) => {
-        return {
-          ...prev,
-          marginTop: value,
-          marginLeft: value,
-          marginRight: value,
-          marginBottom: value,
-        };
-      });
-    }
+    const updatedValuesMargin = value === "" ? undefined : value;
+    setSelectMarginPadding((prev: any) => {
+      return {
+        ...prev,
+        marginTop: updatedValuesMargin,
+        marginLeft: updatedValuesMargin,
+        marginRight: updatedValuesMargin,
+        marginBottom: updatedValuesMargin,
+      };
+    });
   }
   function handleChangeInputPadding(event: any) {
     const value = event.target.value;
     setValuePadding(value);
-    if (value === "") {
-      setSelectMarginPadding((prev: any) => {
-        return {
-          ...prev,
-          paddingTop: undefined,
-          paddingLeft: undefined,
-          paddingRight: undefined,
-          paddingBottom: undefined,
-        };
-      });
-    } else {
-      setSelectMarginPadding((prev: any) => {
-        return {
-          ...prev,
-          paddingTop: value,
-          paddingLeft: value,
-          paddingRight: value,
-          paddingBottom: value,
-        };
-      });
-    }
+    const updatedValuespadding = value === "" ? undefined : value;
+    setSelectMarginPadding((prev: any) => {
+      return {
+        ...prev,
+        paddingTop: updatedValuespadding,
+        paddingLeft: updatedValuespadding,
+        paddingRight: updatedValuespadding,
+        paddingBottom: updatedValuespadding,
+      };
+    });
   }
   function handleChangeInputNumberMarginPadding(
     event: any,
     directionMarginPadding: any
   ) {
-    // setValueMarginPadding(event.target.value);
+    const updatedValuesMagginPadding =
+      event.target.value === "" ? undefined : event.target.value;
     setSelectMarginPadding((prev: any) => {
       return {
         ...prev,
-        [directionMarginPadding]: event.target.value,
+        [directionMarginPadding]: updatedValuesMagginPadding,
       };
     });
-    if (event.target.value === "") {
-      setSelectMarginPadding((prev: any) => {
-        return {
-          ...prev,
-          [directionMarginPadding]: undefined,
-        };
-      });
-    }
-    console.log("directionMarginPadding", directionMarginPadding);
   }
   function inputNumberMarginPadding(direction: string) {
     return (
@@ -109,6 +80,7 @@ export default function Margin(props: any) {
             className={marginPadding["margin-full"]}
             onClick={() => {
               setCustomMarginPadding(false);
+              setActiveIcon(!activeIcon);
             }}
           >
             <div className={marginPadding["box-margin"]} />

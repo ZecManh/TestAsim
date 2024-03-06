@@ -2,6 +2,7 @@ import {
   Button,
   ColorPicker,
   GetProp,
+  Input,
   Select,
   Tabs,
   Upload,
@@ -122,10 +123,15 @@ export default function Background(props: any) {
     props.callBackBackground(selectBackGround);
   };
   sendDataMargin();
+  const [openColor, setOpenColor] = useState(false);
+  function handleChangeClose() {
+    setOpenColor(!openColor);
+  }
   return (
     <>
       <div className={backgroundStyle["select-background"]}>
         <ColorPicker
+          open={openColor}
           defaultValue="#000000"
           onChange={ChangeColor}
           value={selectBackGround.background}
@@ -140,7 +146,10 @@ export default function Background(props: any) {
             </div>
           )}
         >
-          <Button className={backgroundStyle["button-background"]}>
+          <Button
+            className={backgroundStyle["button-background"]}
+            onClick={handleChangeClose}
+          >
             {selectBackGround.background ? (
               <>
                 <div className={backgroundStyle["style-choose-color"]}>

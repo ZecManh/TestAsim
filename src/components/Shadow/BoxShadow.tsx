@@ -4,6 +4,7 @@ import boxShadow from "./BoxShadow.module.scss";
 import { SettingOutlined } from "@ant-design/icons";
 
 import { useState } from "react";
+
 export default function BoxShadow(props: any) {
   const [shadow, setShadow] = useState({
     boxShadow: undefined,
@@ -17,7 +18,7 @@ export default function BoxShadow(props: any) {
   const [color, setColor] = useState("transparent");
   const [lable, setLabel] = useState("");
   const normal: any =
-    "0px 1px 3px 0px rgba(0,0,0,0.1),\n0px 1px 2px 0px rgba(0,0,0,0.06)";
+    "0px 1px 3px 0px rgba(0,0,0,0.1),\n 0px 1px 2px 0px rgba(0,0,0,0.06)";
   const md: string =
     "0px 4px -1px 0px rgba(0,0,0,0.1),\n 0px 2px 4px -1px rgba(0,0,0,0.06)";
   const lg: string =
@@ -79,42 +80,33 @@ export default function BoxShadow(props: any) {
       <p className={boxShadow["text-shadow"]}>{shadow.boxShadow}</p>
     </div>
   );
-
+  const [XValue, setXValue] = useState(0);
+  const [YValue, setYValue] = useState(0);
+  const [VagueValue, setVagueValue] = useState(0);
+  const [ExtendValue, setExtendValue] = useState(0);
   function handleChangeDirection(event: any, direction: any) {
     const value2 = event.target.value;
     const numericValue = value2.replace(/[^0-9-]/g, "");
-
     setShadow((prev: any) => {
-      console.log("prev", prev);
-      return {
+      const updatedShadow = {
         ...prev,
-        [direction]: numericValue,
+        [direction]: `${numericValue}`,
+      };
+      if (numericValue === "") {
+        updatedShadow[direction] = 0;
+      }
+      setXValue(updatedShadow.X);
+      setYValue(updatedShadow.Y);
+      setVagueValue(updatedShadow.Vague);
+      setExtendValue(updatedShadow.Extend);
+      const boxShadow = `${updatedShadow.X}px ${updatedShadow.Y}px ${updatedShadow.Vague}px ${updatedShadow.Extend}px ${color}`;
+
+      console.log("prev", updatedShadow);
+      return {
+        ...updatedShadow,
+        boxShadow: boxShadow,
       };
     });
-    setShadow((prev: any) => {
-      console.log("prev", prev);
-      return {
-        ...prev,
-        boxShadow: `${prev.X}px ${prev.Y}px ${prev.Vague}px ${prev.Extend}px ${color}`,
-      };
-    });
-
-    if (event.target.value === "") {
-      setShadow((prev: any) => {
-        console.log("prev", prev);
-        return {
-          ...prev,
-          [direction]: 0,
-        };
-      });
-      setShadow((prev: any) => {
-        console.log("prev", prev);
-        return {
-          ...prev,
-          boxShadow: `${prev.X}px ${prev.Y}px ${prev.Vague}px ${prev.Extend}px ${color}`,
-        };
-      });
-    }
   }
 
   return (
@@ -151,6 +143,7 @@ export default function BoxShadow(props: any) {
               value: normal,
               label: "normal",
             },
+
             {
               value: md,
               label: "md",
@@ -170,20 +163,25 @@ export default function BoxShadow(props: any) {
       {showSettingShadow && (
         <div>
           <div className={boxShadow["setting-shadow"]}>
+            <ColorPicker
+              style={{ marginRight: "5px" }}
+              onChange={onChangeColor}
+            />
             <div className={boxShadow["border-top-left"]}>
               <Input
                 className={boxShadow["input-top-left"]}
-                value={boxShadow["topLeftBorderRadius"]}
+                value={XValue ? XValue : ""}
                 onChange={(value: any) => {
                   handleChangeDirection(value, "X");
                 }}
               />
+
               <div className={boxShadow["icon-top"]}>X</div>
             </div>
             <div className={boxShadow["border-top-right"]}>
               <Input
                 className={boxShadow["input-top-right"]}
-                value={boxShadow["topRightBorderRadius"]}
+                value={YValue ? YValue : ""}
                 onChange={(value: any) => {
                   handleChangeDirection(value, "Y");
                 }}
@@ -193,7 +191,7 @@ export default function BoxShadow(props: any) {
             <div className={boxShadow["border-bottom-left"]}>
               <Input
                 className={boxShadow["input-bottom-left"]}
-                value={boxShadow["bottomLeftBorderRadius"]}
+                value={VagueValue ? VagueValue : ""}
                 onChange={(value: any) => {
                   handleChangeDirection(value, "Vague");
                 }}
@@ -203,17 +201,13 @@ export default function BoxShadow(props: any) {
             <div className={boxShadow["border-bottom-right"]}>
               <Input
                 className={boxShadow["input-bottom-right"]}
-                value={boxShadow["bottomRightBorderRadius"]}
+                value={ExtendValue ? ExtendValue : ""}
                 onChange={(value: any) => {
                   handleChangeDirection(value, "Extend");
                 }}
               />
               <div className={boxShadow["icon-right"]}>Extend</div>
             </div>
-            <ColorPicker
-              style={{ marginLeft: "5px" }}
-              onChange={onChangeColor}
-            />
           </div>
         </div>
       )}

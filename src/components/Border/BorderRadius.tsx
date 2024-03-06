@@ -18,32 +18,26 @@ export default function BorderRadius(props: any) {
 
   const handleChangeNumberRadius = (event: any) => {
     const value2 = event.target.value;
-    setBorderRadius({
-      topLeftBorderRadius: value2,
-      topRightBorderRadius: value2,
-      bottomLeftBorderRadius: value2,
-      bottomRightBorderRadius: value2,
-    });
-    if (value2 === "") {
-      setBorderRadius({});
-    }
+    setBorderRadius(
+      value2 === ""
+        ? {}
+        : {
+            topLeftBorderRadius: value2,
+            topRightBorderRadius: value2,
+            bottomLeftBorderRadius: value2,
+            bottomRightBorderRadius: value2,
+          }
+    );
   };
   const handleChangeInputRadiusDirection = (event: any, position: any) => {
     const value3 = event.target.value;
+    const updateInputDirection = value3 === "" ? undefined : value3;
     setBorderRadius((prev: any) => {
       return {
         ...prev,
-        [position]: value3,
+        [position]: updateInputDirection,
       };
     });
-    if (value3 === "") {
-      setBorderRadius((prev: any) => {
-        return {
-          ...prev,
-          [position]: undefined,
-        };
-      });
-    }
   };
   const sendDataRadius = () => {
     props.callBackBorderRadius(borderRadius);
